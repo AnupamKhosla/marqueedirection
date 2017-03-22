@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+    body {
+        padding: 100px;
+    }
+    
+    .marquee-wrapper {
+        height: 200px;
+        overflow: auto;
+    }
+    
+    .marquee-content {
+        margin: 0;
+        padding: 30px 0;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="marquee-wrapper">
+        <div class="marquee-content">
+            Updates: Update (8 Mar 2016): Now plugin have new option: startVisible The marquee will be visible in the start if set to true. Thanks to @nuke-ellington 👍 Update (24 Jan 2014): Note: people who been asking me how to use this plugin with content being loaded with Ajax, please read notes about this update. New methods added, so now after you start the plugin using var $mq = $('.marquee').marquee();, you start the plugin using var $mq = $('.marquee').marquee();, you start the plugin using var $mq = $('.marquee').marquee();, then you can pause, resume, togglepause, resume) and desestroy destroy toggle(pause, resume) and destroy toggle(pause, resume) and destroy methods e.g to remove the marquee plugin from your element simply use $mq.marquee('destroy');. Similarly you can use pause the marquee any time using $mq.marquee('pause');.
+        </div>
+    </div>
+    <button id="up">Up</button>
+    <button id="down">Down</button>
+    <script src="https://code.jquery.com/jquery-2.2.4.js"></script>
+    <script>
+    if ($(".marquee").height() < $(".marquee-content").outerHeight(true)) {
+
+        var up, down;
+
+        function up_timer() {
+        	clearInterval(up);
+            clearInterval(down);
+            up = setInterval(function() {
+                $('.marquee-wrapper').scrollTop($('.marquee-wrapper').scrollTop() - 1);
+                if ($('.marquee-wrapper').scrollTop() <= 1) {
+                    $('.marquee-wrapper').scrollTop($('.marquee-wrapper').prop('scrollHeight')/2);
+                }
+            }, 60);
+        }
+
+        function down_timer() {
+        	clearInterval(up);
+            clearInterval(down);
+            down = setInterval(function() {
+                $('.marquee-wrapper').scrollTop($('.marquee-wrapper').scrollTop() + 1);
+                if ($('.marquee-wrapper').scrollTop() >= $('.marquee-wrapper').prop('scrollHeight') / 2) {
+                    $('.marquee-wrapper').scrollTop(0);
+                }
+            }, 60);
+        }
+
+
+        $(".marquee-content").clone().appendTo($(".marquee-wrapper"));
+        down_timer();
+
+        $("#up").click(function() {
+        	
+            up_timer();
+        });
+
+        $("#down").click(function() {
+            
+            down_timer();
+        });
+
+    }
+    </script>
+</body>
+
+</html>
