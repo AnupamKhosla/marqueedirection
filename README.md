@@ -29,7 +29,7 @@ jQuery marquee effect that can change direction
             <div class="marquee-content">
                Some long text here...
             </div>            
-    	</div>
+        </div>
     </div>
 
 css:  
