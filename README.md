@@ -1,4 +1,4 @@
-# marquee-toggle
+# marquee-direction
 jQuery marquee effect that can change direction
 
 ## Options  
