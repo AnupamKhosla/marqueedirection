@@ -2,7 +2,7 @@
 jQuery marquee effect that can change direction
 
 ## Options  
- - **speed** Value 1 = 1px scroll per second.  
+ - **speed** Value 1 = 1px scroll per second. It must be positive.
  - **direction** `vertical` or `horizontal`  
  
 ## Events  
@@ -46,7 +46,7 @@ css:
     
     .marquee {
         overflow: auto;
-       	padding: 15px 0;
+       	padding: 0;
         margin: 15px 0;
     }
 
@@ -74,6 +74,10 @@ js:
 
     $(".marquee").trigger("revalidate"); //E.g. if on window.resize text doesn't overflow you might want to disable marquee 
 
+## Note  
+
+`.marquee` and `.marquee-wrapper` must have **no padding**. Any padding can be applied to either `.marquee-content` or you may wrap `.marquee` in another container.
+
 ## data-\* API  
 
 The plugin supports data-\* attributes. If both data-\* and `settings` are passed in javscript initialization then data-\* values will override the later.
@@ -89,6 +93,8 @@ Toggle event like forward and backward would be useful
 
 ### marquee_overflow_setInterval  
 Marquee effect acheived with native setInterval by incrementing/decrementing `scrollTop`/`scrollLeft` with setInterval. data-\* plugin initialaztion also added. Since setInterval doesn't fire earlier than 10ms so the practical speed limit with this method is 1px to 10ppx per second. This could be incresed by decreasing the fram rate, i.e. increasing scrollTop/left in more than 1px steps. But jquery animate natively takes care of this. So better use marquee-animate-toggle above file.
+
+The problem is solved now. And the next version of the plugin will support css3 transitions. :-)
 
 ### marquee_translate_transition 
 Marquee effect _to be_ acheived with transtion property over `translate` so as to use native css transition with gpu acceleration. This file doesn't work yet. Problem is with [unneccessary delay required](http://stackoverflow.com/q/42930773/3429430) -- Pending.  
