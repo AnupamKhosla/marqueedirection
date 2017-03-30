@@ -108,11 +108,11 @@
 
                         $half_scroll = Math.round($(that).prop("scrollWidth") / 2);
                         $(that).stop();
-                        if ($(that).scrollLeft() <= $half_scroll - $(that).outerHeight()) {
+                        if ($(that).scrollLeft() <= $half_scroll - $(that).outerWidth()) {
                             $(that).scrollLeft($(that).scrollLeft() + $half_scroll);
                         }
 
-                        $scroll_step = $(that).outerHeight() + $(that).scrollLeft() - $half_scroll;
+                        $scroll_step = $(that).outerWidth() + $(that).scrollLeft() - $half_scroll;
                           if($settings.speed > 0) {
                             $speed = (!!settings ? settings.speed : $settings.speed);
                         }
@@ -122,7 +122,7 @@
                         }
 
                         $(that).animate({
-                            scrollLeft: $half_scroll - $(that).outerHeight()
+                            scrollLeft: $half_scroll - $(that).outerWidth()
                         }, (1 / $speed) * $scroll_step * 1000, "linear", function() { $backward(event, settings) });
 
                     }
