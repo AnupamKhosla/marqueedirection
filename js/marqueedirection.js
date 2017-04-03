@@ -1,5 +1,8 @@
 ;
 (function($) {
+
+    'use strict';
+
     $.fn.extend({
         marquee: function(options) {
 
@@ -16,12 +19,13 @@
                 });
 
                 var $forward, $backward, $pause, $revalidate; // Main feature functions   
-                var $toggleForward; //evtnt that will enable back and forth togglinf in forward direction           
+                var $toggleForward; //evtnt that will enable back and forth togglinf in forward direction  
+                var $forwardStop; // Will scroll the shit and stop when content finishes off.         
 
                 var $scroll_step; // The remaining scroll distance. The distance for one animation
                 var $half_scroll; // To store nearest integer of two_divs_scrollHeight/2 or two_divs_scrollWidth/2 
                 var $speed; //Dynamic speed as per remaining amount of scroll
-                
+
 
                 $pause = function() {
                     $(that).stop();
@@ -116,6 +120,40 @@
 
                     };
 
+                    $forwardStop = function(event, settings) {
+
+
+
+                        $half_scroll = Math.floor($(that).prop("scrollHeight") / 2);
+                        $(that).stop();
+
+                        if ($settings.speed > 0) {
+                            $speed = (!!settings ? settings.speed : $settings.speed);
+                        } else {
+                            console.error("speed must be > 0");
+                            $speed = 1;
+                        }
+
+                        if ($(that).scrollTop() < $half_scroll - $(that).outerHeight()) {
+
+                            $scroll_step = $half_scroll - $(that).outerHeight() - $(that).scrollTop();                           
+
+                            $(that).animate({
+                                scrollTop: $half_scroll - $(that).outerHeight()
+                            }, (1 / $speed) * $scroll_step * 1000, "linear");
+
+                        }
+                        else if(($(that).scrollTop() != (2*$half_scroll - $(that).outerHeight())) && ($(that).scrollTop() != ($half_scroll - $(that).outerHeight()))){
+
+                            $scroll_step = 2*$half_scroll - $(that).outerHeight() - $(that).scrollTop();
+                            $(that).animate({
+                                scrollTop: 2*$half_scroll - $(that).outerHeight()
+                            }, (1 / $speed) * $scroll_step * 1000, "linear");
+
+                        }
+
+                    };
+
 
 
                 } else if (($settings.direction == "horizontal")) {
@@ -166,7 +204,7 @@
 
                     };
 
-                     $toggleForward = function(event, settings) {
+                    $toggleForward = function(event, settings) {
 
                         $half_scroll = Math.floor($(that).prop("scrollWidth") / 2);
                         $(that).stop();
@@ -203,22 +241,54 @@
 
                     };
 
+                     $forwardStop = function(event, settings) {
+
+                        $half_scroll = Math.floor($(that).prop("scrollWidth") / 2);
+                        $(that).stop();
+                        if ($settings.speed > 0) {
+                            $speed = (!!settings ? settings.speed : $settings.speed);
+                        } else {
+                            console.error("speed must be > 0");
+                            $speed = 1;
+                        }
+
+                        if ($(that).scrollLeft() < $half_scroll - $(that).outerWidth()) {
+
+                            $scroll_step = $half_scroll - $(that).outerWidth() - $(that).scrollLeft();
+
+                            $(that).animate({
+                                scrollLeft: $half_scroll - $(that).outerWidth()
+                            }, (1 / $speed) * $scroll_step * 1000, "linear");
+
+                        }
+                        else if(($(that).scrollLeft() != (2*$half_scroll - $(that).outerWidth())) && ($(that).scrollLeft() != ($half_scroll - $(that).outerWidth()))){
+                            
+                            $scroll_step = 2*$half_scroll - $(that).outerWidth() - $(that).scrollLeft();
+                            $(that).animate({
+                                scrollLeft: 2*$half_scroll - $(that).outerWidth()
+                            }, (1 / $speed) * $scroll_step * 1000, "linear");
+
+                        }
+
+                    };
+
 
                 }
 
 
                 $revalidate = function() {
 
-                    if (!((($settings.direction == "vertical") && ($(that).outerHeight() <= ($(that).find(".marquee-content").outerHeight() - parseInt($(that).find(".marquee-content").css("padding-bottom")))  )) || (($settings.direction == "horizontal") && ($(that).outerWidth() <= ($(that).find(".marquee-content").outerWidth() - parseInt($(that).find(".marquee-content").css("padding-right"))) )))) {
+                    if (!((($settings.direction == "vertical") && ($(that).outerHeight() <= ($(that).find(".marquee-content").outerHeight() - parseInt($(that).find(".marquee-content").css("padding-bottom"))))) || (($settings.direction == "horizontal") && ($(that).outerWidth() <= ($(that).find(".marquee-content").outerWidth() - parseInt($(that).find(".marquee-content").css("padding-right"))))))) {
                         $(that).trigger("pause");
                         $(that).find(".marquee-content").eq(1).remove();
-                        $(that).off("pause forward backward toggleForward");
+                        $(that).off("pause forward backward toggleForward forwardStop");
                     } else if (!$(that).find(".marquee-content").eq(1).length) {
-                            $(that).find(".marquee-content").clone().appendTo($(that).find(".marquee-wrapper"));
-                            $(that).on("pause", $pause);
-                            $(that).on("forward", $forward);
-                            $(that).on("backward", $backward);
-                            $(that).on("toggleForward", $toggleForward);   
+                        $(that).find(".marquee-content").clone().appendTo($(that).find(".marquee-wrapper"));
+                        $(that).on("pause", $pause);
+                        $(that).on("forward", $forward);
+                        $(that).on("backward", $backward);
+                        $(that).on("toggleForward", $toggleForward);
+                        $(that).on("forwardStop", $forwardStop);
                     }
                 }
 
